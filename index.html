@@ -138,7 +138,7 @@
                 responseDiv.innerHTML = '<span class="text-blue-400 animate-pulse">Generating...</span>';
                 
                 // Add an instruction to the prompt to keep the response focused on arm wrestling
-                const prompt = `Please answer the following question as if you are an arm wrestling expert. Focus only on information relevant to arm wrestling: ${userPrompt}`;
+                const prompt = `Please answer in short 50 words at max the following question as if you are an arm wrestling expert. Focus only on information relevant to arm wrestling: ${userPrompt}`;
 
                 let chatHistory = [];
                 chatHistory.push({ role: "user", parts: [{ text: prompt }] });
