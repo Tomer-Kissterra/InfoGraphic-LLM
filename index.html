@@ -3,123 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arm-Wrestling Strength Benchmarks</title>
+    <title>Combined Ratio Tooltip</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
         body {
             font-family: 'Inter', sans-serif;
+            text-align: left;
         }
-        .container-bg {
-            background-color: #1a202c; /* A deep charcoal for a sleek dark mode */
+        /* Adjusted colors to be darker, closer to the user's screenshot */
+        .bg-custom-dark {
+            background-color: #0b0c16; /* A very dark, almost black background */
+        }
+        .bg-card-dark {
+            background-color: #1a1e2b; /* A slightly lighter, but still very dark, card color */
+        }
+        .text-blue-beacon {
+            color: #64b5f6;
+        }
+        .formula-container {
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            color: #e2e8f0;
+            line-height: 1.5;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background-color: #1a1e2b; /* Match card background for consistency */
+            overflow-x: auto;
+        }
+        .frac {
+            display: inline-block;
+            vertical-align: middle;
+            font-size: 1em;
+            text-align: center;
+        }
+        .frac > span {
+            display: block;
+            padding: 0 0.25em;
+        }
+        .frac > span.bar {
+            border-bottom: 2px solid #e2e8f0;
+            margin: 0 -0.25em;
+        }
+        .benchmark-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            cursor: pointer;
+        }
+        .benchmark-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2), 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .benchmark-level {
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .score-text {
+            font-weight: bold;
+            font-size: 1.25rem;
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen flex items-center justify-center p-4">
-    
-    <div class="container-bg max-w-4xl w-full mx-auto p-8 rounded-2xl shadow-2xl space-y-8 border border-gray-700">
-        <!-- Main Title -->
-        <header class="text-center">
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-blue-400 leading-tight tracking-wide">
-                Arm-Wrestling Strength Benchmarks
-            </h1>
-            <p class="mt-2 text-lg md:text-xl text-gray-400">
-                A look at the numbers behind Devon Larratt's training pillars.
+<body class="bg-custom-dark text-gray-100 p-4">
+
+    <div class="max-w-md mx-auto space-y-4">
+
+        <!-- Header and Description -->
+        <div class="text-center pb-2 border-b border-gray-700">
+            <h1 class="text-xl font-bold text-blue-400">Combined Ratio</h1>
+            <p class="mt-1 text-gray-300 text-sm">
+                A key metric for evaluating an insurance company's operating profitability.
+                A lower score indicates better performance.
             </p>
-        </header>
-
-        <div class="grid md:grid-cols-2 gap-8">
-            <!-- Rising Section -->
-            <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700 hover:scale-105 transition-transform duration-300">
-                <h2 class="text-2xl font-bold text-yellow-400 mb-4 border-b-2 border-yellow-400 pb-2">Rising</h2>
-                <ul class="space-y-3 text-gray-300">
-                    <li class="flex justify-between items-center bg-gray-700 p-3 rounded-md">
-                        <span class="font-medium text-lg">Average:</span>
-                        <span class="font-bold text-xl text-yellow-300">20-23 kg (44-50 lbs)</span>
-                    </li>
-                    <li class="flex justify-between items-center bg-gray-700 p-3 rounded-md">
-                        <span class="font-medium text-lg">Really Good:</span>
-                        <span class="font-bold text-xl text-yellow-300">28-32 kg (62-70 lbs)</span>
-                    </li>
-                </ul>
-                <p class="mt-4 text-sm text-gray-400">
-                    Pushes your knuckles upward, a key leverage movement.
-                </p>
-            </div>
-
-            <!-- Pronation Section -->
-            <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700 hover:scale-105 transition-transform duration-300">
-                <h2 class="text-2xl font-bold text-green-400 mb-4 border-b-2 border-green-400 pb-2">Pronation</h2>
-                <ul class="space-y-3 text-gray-300">
-                    <li class="flex justify-between items-center bg-gray-700 p-3 rounded-md">
-                        <span class="font-medium text-lg">Average:</span>
-                        <span class="font-bold text-xl text-green-300">28-32 kg (62-70 lbs)</span>
-                    </li>
-                    <li class="flex justify-between items-center bg-gray-700 p-3 rounded-md">
-                        <span class="font-medium text-lg">Really Good:</span>
-                        <span class="font-bold text-xl text-green-300">38-42 kg (84-93 lbs)</span>
-                    </li>
-                </ul>
-                <p class="mt-4 text-sm text-gray-400">
-                    Rotating the forearm outward to break the opponent’s wrist.
-                </p>
-            </div>
-            
-            <!-- Back Pressure (Posting) Section -->
-            <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700 hover:scale-105 transition-transform duration-300">
-                <h2 class="text-2xl font-bold text-red-400 mb-4 border-b-2 border-red-400 pb-2">Back Pressure</h2>
-                <ul class="space-y-3 text-gray-300">
-                    <li class="flex justify-between items-center bg-gray-700 p-3 rounded-md">
-                        <span class="font-medium text-lg">Noob:</span>
-                        <span class="font-bold text-xl text-red-300">30-45 kg (66-99 lbs)</span>
-                    </li>
-                    <li class="flex justify-between items-center bg-gray-700 p-3 rounded-md">
-                        <span class="font-medium text-lg">Pro:</span>
-                        <span class="font-bold text-xl text-red-300">45-55 kg (99-121 lbs)</span>
-                    </li>
-                    <li class="flex justify-between items-center bg-gray-700 p-3 rounded-md">
-                        <span class="font-medium text-lg">Elite:</span>
-                        <span class="font-bold text-xl text-red-300">65-75 kg (143-165 lbs)</span>
-                    </li>
-                </ul>
-                <p class="mt-4 text-sm text-gray-400">
-                    Pulling the opponent toward your body, a foundational strength.
-                </p>
-            </div>
-
-            <!-- Cupping Section -->
-            <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700 hover:scale-105 transition-transform duration-300">
-                <h2 class="text-2xl font-bold text-purple-400 mb-4 border-b-2 border-purple-400 pb-2">Cupping</h2>
-                <ul class="space-y-3 text-gray-300">
-                    <li class="flex justify-between items-center bg-gray-700 p-3 rounded-md">
-                        <span class="font-medium text-lg">Primary Focus:</span>
-                        <span class="font-bold text-xl text-purple-300">High-Rep Volume</span>
-                    </li>
-                    <li class="flex justify-between items-center bg-gray-700 p-3 rounded-md">
-                        <span class="font-medium text-lg">Devon Larratt's style:</span>
-                        <span class="font-bold text-xl text-purple-300">Up to 50 reps per set</span>
-                    </li>
-                </ul>
-                <p class="mt-4 text-sm text-gray-400">
-                    Flexing the wrist inward to crush the opponent’s hand.
-                </p>
-            </div>
         </div>
 
-        <!-- Ask Gemini Section -->
-        <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700 mt-8">
-            <h2 class="text-2xl font-bold text-blue-300 mb-4 border-b-2 border-blue-300 pb-2">Ask AI</h2>
-            <div class="space-y-4">
-                <textarea id="gemini-prompt" class="w-full h-24 p-4 bg-gray-700 text-gray-200 rounded-md placeholder-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ask a question about arm wrestling, training, or anything else..."></textarea>
-                <button id="generate-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:bg-blue-700 transition-colors duration-300">
-                    Generate Response
-                </button>
-                <div id="gemini-response" class="mt-4 p-4 bg-gray-700 rounded-md text-gray-300 min-h-[5rem] flex items-center justify-center text-center">
-                    <span class="text-gray-500 italic">Your response will appear here.</span>
+        <!-- Formula -->
+        <div class="bg-card-dark p-4 rounded-md border border-gray-700">
+            <h2 class="text-lg font-bold text-gray-200 mb-2">Calculation Formula</h2>
+            <div class="formula-container overflow-x-auto">
+                <div class="flex flex-col">
+                    <!-- The entire numerator -->
+                    <div class="flex items-center text-sm md:text-base mb-2">
+                        <span class="text-white font-bold whitespace-nowrap">(CPB / 0.81) + 50 + </span>
+                        <div class="flex flex-col items-center">
+                            <span class="text-yellow-400 font-bold whitespace-nowrap">LifeTimeCost</span>
+                        </div>
+                        <span class="text-base font-bold mx-1">×</span>
+                        <div class="flex flex-col items-center">
+                            <span class="text-yellow-400 font-bold whitespace-nowrap">ClickLossAdj</span>
+                        </div>
+                    </div>
+                    <!-- The main fraction bar -->
+                    <div class="w-full h-px bg-gray-400"></div>
+                    <!-- The denominator on a new line -->
+                    <div class="flex justify-center text-base mt-2">
+                        <span class="text-blue-400 font-bold whitespace-nowrap">
+                            <div class="flex items-center">
+                                <span class="text-blue-400 font-bold">LifetimePremium</span>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <!-- The updated bullet points -->
+            <ul class="list-disc list-inside mt-2 text-xs text-gray-400 space-y-1">
+                <li>All values in the formula represent a sum of their respective metrics.</li>
+                <li>`LifeTimeCost`, `ClickLossAdj` and `LifetimePremium` are normalized by dividing by `ScoredPolicies`.</li>
+                <li>Formula based on internal company metrics and data.</li>
+            </ul>
+        </div>
+
+        <!-- Benchmarks -->
+        <div class="space-y-3">
+            <h2 class="text-lg font-bold text-gray-200 mb-1">US Insurance Industry Benchmarks</h2>
+
+            <!-- Benchmark: Excellent -->
+            <div class="benchmark-card bg-card-dark border border-gray-700">
+                <div class="flex items-center space-x-2">
+                    <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                    <span class="benchmark-level text-green-400">Good</span>
+                </div>
+                <div class="text-gray-300">
+                    <span class="score-text text-green-300">Below 95%</span>
+                </div>
+            </div>
+
+            <!-- Benchmark: Average -->
+            <div class="benchmark-card bg-card-dark border border-gray-700">
+                <div class="flex items-center space-x-2">
+                    <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
+                    <span class="benchmark-level text-yellow-400">Average</span>
+                </div>
+                <div class="text-gray-300">
+                    <span class="score-text text-yellow-300">95% - 100%</span>
+                </div>
+            </div>
+
+            <!-- Benchmark: Poor -->
+            <div class="benchmark-card bg-card-dark border border-gray-700">
+                <div class="flex items-center space-x-2">
+                    <div class="w-2 h-2 rounded-full bg-red-500"></div>
+                    <span class="benchmark-level text-red-400">Poor</span>
+                </div>
+                <div class="text-gray-300">
+                    <span class="score-text text-red-300">Above 100%</span>
                 </div>
             </div>
         </div>
-        
+
+        <!-- Note -->
+        <div class="mt-4 p-3 rounded-md bg-card-dark border border-gray-700 text-xs text-gray-400">
+            <p>
+                *Note: Combined Ratio does not include investment income.
+                A score below 100% indicates that the company is profitable from its core operations (claims and expenses).
+            </p>
+        </div>
+
+        <!-- Ask Gemini Section -->
+        <div class="bg-card-dark p-3 rounded-md shadow-lg border border-gray-700 mt-4">
+            <h2 class="text-base font-bold text-blue-300 mb-1 border-b-2 border-blue-300 pb-1">Ask Gemini about Combined Ratio</h2>
+            <div class="space-y-3">
+                <textarea id="gemini-prompt" class="w-full h-20 p-2 bg-gray-700 text-gray-200 rounded-md placeholder-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" placeholder="Ask a question about improving Combined Ratio as a media buyer..."></textarea>
+                <button id="generate-btn" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-md shadow-lg hover:bg-blue-700 transition-colors duration-300 text-sm">
+                    Get Answer
+                </button>
+                <div id="gemini-response" class="mt-2 p-2 bg-gray-700 rounded-md text-gray-300 min-h-[4rem] flex items-center justify-center text-center text-xs">
+                    <span class="text-gray-500 italic">Your answer will appear here.</span>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -137,13 +196,12 @@
 
                 responseDiv.innerHTML = '<span class="text-blue-400 animate-pulse">Generating...</span>';
                 
-                // Add an instruction to the prompt to keep the response focused on arm wrestling
-                const prompt = `Please answer in short 50 words at max the following question as if you are an arm wrestling expert. Focus only on information relevant to arm wrestling: ${userPrompt}`;
+                // Add a specific instruction to the prompt to focus on Combined Ratio and the media buyer's role
+                const prompt = `Answer this question with actionable advice for a media buyer in the insurance industry, focusing specifically on how to improve the Combined Ratio over time. Question: ${userPrompt}`;
 
                 let chatHistory = [];
                 chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-                const payload = { contents: chatHistory };
-                const apiKey = "AIzaSyDAVLC5BY2OLOUswa5e05A9h2FIOW6BISs" 
+                const apiKey = "AIzaSyDAVLC5BY2OLOUswa5e05A9h2FIOW6BISs"; // Placeholder for your API key
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
                 try {
