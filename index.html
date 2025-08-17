@@ -7,39 +7,46 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* New styling for richer Liquid Glass effect */
+        .glass-background {
+            background-color: rgba(10, 10, 15, 0.6); /* Even deeper, almost black with a hint of purple */
+            backdrop-filter: blur(15px) saturate(150%); /* Stronger blur and saturation */
+            -webkit-backdrop-filter: blur(15px) saturate(150%);
+            border: 1px solid rgba(40, 40, 50, 0.4); /* Refined border */
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); /* Prominent shadow */
+        }
+        .bg-glass-card {
+            background-color: rgba(15, 15, 25, 0.6); /* Darker card background */
+            backdrop-filter: blur(20px) brightness(1.2); /* Stronger blur and brightness */
+            -webkit-backdrop-filter: blur(20px) brightness(1.2);
+            border: 1px solid rgba(50, 50, 60, 0.5);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* General styles, with more vibrant colors */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
         body {
             font-family: 'Inter', sans-serif;
             text-align: left;
-            background-color: transparent; /* Changed to transparent */
+            background-color: transparent;
             color: #e2e8f0;
-        }
-        /* New, richer color palette */
-        .bg-custom-dark {
-            background-color: transparent; /* Changed to transparent */
-        }
-        .bg-card-dark {
-            background-color: #161b22; /* Darker card background */
         }
         .text-blue-beacon {
-            color: #58a6ff; /* A vibrant blue for headers */
+            color: #4dc0b5; /* A vibrant teal color */
         }
         .text-yellow-premium {
-            color: #d2a8ff; /* A purple tone for premium metrics */
+            color: #ffda6a; /* Richer gold */
         }
         .text-cyan-metrics {
-            color: #52c5c0; /* A cyan/turquoise for other metrics */
+            color: #58a6ff; /* A strong blue */
         }
+        .text-good { color: #50fa7b; } /* Bright green for "Good" */
+        .text-average { color: #f1fa8c; } /* Vibrant yellow for "Average" */
+        .text-poor { color: #ff5555; } /* Bold red for "Poor" */
         
         .formula-container {
-            font-family: 'Inter', sans-serif;
             font-size: 1rem;
-            color: #e2e8f0;
             line-height: 1.5;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            background-color: #161b22;
-            overflow-x: auto;
         }
         .frac {
             display: inline-block;
@@ -79,9 +86,9 @@
         }
     </style>
 </head>
-<body class="bg-custom-dark text-gray-100 p-2 md:p-4">
+<body class="bg-transparent text-gray-100 p-4">
 
-    <div class="max-w-md mx-auto w-full space-y-3">
+    <div class="max-w-md mx-auto w-full space-y-4 glass-background p-6 rounded-2xl">
 
         <!-- Header and Description -->
         <div class="text-center pb-2 border-b border-gray-700">
@@ -93,10 +100,10 @@
         </div>
 
         <!-- Formula -->
-        <div class="bg-card-dark p-3 rounded-md border border-gray-700">
+        <div class="bg-glass-card p-4 rounded-md">
             <h2 class="text-lg font-bold text-gray-200 mb-2">Calculation Formula</h2>
             <div class="formula-container overflow-x-auto p-2">
-                <div class="flex flex-col">
+                <div class="flex flex-col items-center">
                     <!-- The entire numerator -->
                     <div class="flex items-center text-sm md:text-base mb-2">
                         <span class="text-white font-bold whitespace-nowrap">(CPB / 0.81) + 50 + </span>
@@ -133,49 +140,49 @@
             <h2 class="text-lg font-bold text-gray-200 mb-1">US Insurance Industry Benchmarks</h2>
 
             <!-- Benchmark: Excellent -->
-            <div class="benchmark-card bg-card-dark border border-gray-700">
+            <div class="bg-glass-card p-3 rounded-md">
                 <div class="flex items-center space-x-2">
                     <div class="w-2 h-2 rounded-full bg-green-500"></div>
-                    <span class="benchmark-level text-green-400">Good</span>
+                    <span class="font-bold text-good">Good</span>
                 </div>
                 <div class="text-gray-300">
-                    <span class="score-text text-green-300">Below 95%</span>
+                    <span class="font-bold text-xl text-good">Below 95%</span>
                 </div>
             </div>
 
             <!-- Benchmark: Average -->
-            <div class="benchmark-card bg-card-dark border border-gray-700">
+            <div class="bg-glass-card p-3 rounded-md">
                 <div class="flex items-center space-x-2">
                     <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
-                    <span class="benchmark-level text-yellow-400">Average</span>
+                    <span class="font-bold text-average">Average</span>
                 </div>
                 <div class="text-gray-300">
-                    <span class="score-text text-yellow-300">95% - 100%</span>
+                    <span class="font-bold text-xl text-average">95% - 100%</span>
                 </div>
             </div>
 
             <!-- Benchmark: Poor -->
-            <div class="benchmark-card bg-card-dark border border-gray-700">
+            <div class="bg-glass-card p-3 rounded-md">
                 <div class="flex items-center space-x-2">
                     <div class="w-2 h-2 rounded-full bg-red-500"></div>
-                    <span class="benchmark-level text-red-400">Poor</span>
+                    <span class="font-bold text-poor">Poor</span>
                 </div>
                 <div class="text-gray-300">
-                    <span class="score-text text-red-300">Above 100%</span>
+                    <span class="font-bold text-xl text-poor">Above 100%</span>
                 </div>
             </div>
         </div>
 
         <!-- Note -->
-        <div class="mt-4 p-3 rounded-md bg-card-dark border border-gray-700 text-xs text-gray-400">
-            <p>
+        <div class="bg-glass-card p-3 rounded-md mt-4">
+            <p class="text-xs text-gray-400">
                 *Note: Combined Ratio does not include investment income.
                 A score below 100% indicates that the company is profitable from its core operations (claims and expenses).
             </p>
         </div>
 
         <!-- Ask Gemini Section -->
-        <div class="bg-card-dark p-3 rounded-md shadow-lg border border-gray-700 mt-4">
+        <div class="bg-glass-card p-3 rounded-md mt-4">
             <h2 class="text-base font-bold text-blue-300 mb-1 border-b-2 border-blue-300 pb-1">Ask Gemini about Combined Ratio</h2>
             <div class="space-y-3">
                 <textarea id="gemini-prompt" class="w-full h-20 p-2 bg-gray-700 text-gray-200 rounded-md placeholder-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" placeholder="Ask a question about improving Combined Ratio as a media buyer..."></textarea>
@@ -210,8 +217,7 @@
 
                 let chatHistory = [];
                 chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-                const payload = { contents: chatHistory };
-                const apiKey = "AIzaSyDAVLC5BY2OLOUswa5e05A9h2FIOW6BISs"; // Placeholder for your API key
+                const apiKey = "YOUR_API_KEY_HERE"; // Placeholder for your API key
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
                 try {
