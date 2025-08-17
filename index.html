@@ -11,17 +11,26 @@
         body {
             font-family: 'Inter', sans-serif;
             text-align: left;
+            background-color: transparent; /* Changed to transparent */
+            color: #e2e8f0;
         }
-        /* Adjusted colors to be darker, closer to the user's screenshot */
+        /* New, richer color palette */
         .bg-custom-dark {
-            background-color: #0b0c16; /* A very dark, almost black background */
+            background-color: transparent; /* Changed to transparent */
         }
         .bg-card-dark {
-            background-color: #1a1e2b; /* A slightly lighter, but still very dark, card color */
+            background-color: #161b22; /* Darker card background */
         }
         .text-blue-beacon {
-            color: #64b5f6;
+            color: #58a6ff; /* A vibrant blue for headers */
         }
+        .text-yellow-premium {
+            color: #d2a8ff; /* A purple tone for premium metrics */
+        }
+        .text-cyan-metrics {
+            color: #52c5c0; /* A cyan/turquoise for other metrics */
+        }
+        
         .formula-container {
             font-family: 'Inter', sans-serif;
             font-size: 1rem;
@@ -29,7 +38,7 @@
             line-height: 1.5;
             padding: 1rem;
             border-radius: 0.5rem;
-            background-color: #1a1e2b; /* Match card background for consistency */
+            background-color: #161b22;
             overflow-x: auto;
         }
         .frac {
@@ -70,13 +79,13 @@
         }
     </style>
 </head>
-<body class="bg-custom-dark text-gray-100 p-4">
+<body class="bg-custom-dark text-gray-100 p-2 md:p-4">
 
-    <div class="max-w-md mx-auto space-y-4">
+    <div class="max-w-md mx-auto w-full space-y-3">
 
         <!-- Header and Description -->
         <div class="text-center pb-2 border-b border-gray-700">
-            <h1 class="text-xl font-bold text-blue-400">Combined Ratio</h1>
+            <h1 class="text-xl font-bold text-blue-beacon">Combined Ratio</h1>
             <p class="mt-1 text-gray-300 text-sm">
                 A key metric for evaluating an insurance company's operating profitability.
                 A lower score indicates better performance.
@@ -84,28 +93,28 @@
         </div>
 
         <!-- Formula -->
-        <div class="bg-card-dark p-4 rounded-md border border-gray-700">
+        <div class="bg-card-dark p-3 rounded-md border border-gray-700">
             <h2 class="text-lg font-bold text-gray-200 mb-2">Calculation Formula</h2>
-            <div class="formula-container overflow-x-auto">
+            <div class="formula-container overflow-x-auto p-2">
                 <div class="flex flex-col">
                     <!-- The entire numerator -->
                     <div class="flex items-center text-sm md:text-base mb-2">
                         <span class="text-white font-bold whitespace-nowrap">(CPB / 0.81) + 50 + </span>
                         <div class="flex flex-col items-center">
-                            <span class="text-yellow-400 font-bold whitespace-nowrap">LifeTimeCost</span>
+                            <span class="text-yellow-premium font-bold whitespace-nowrap">LifeTimeCost</span>
                         </div>
                         <span class="text-base font-bold mx-1">×</span>
                         <div class="flex flex-col items-center">
-                            <span class="text-yellow-400 font-bold whitespace-nowrap">ClickLossAdj</span>
+                            <span class="text-yellow-premium font-bold whitespace-nowrap">ClickLossAdj</span>
                         </div>
                     </div>
                     <!-- The main fraction bar -->
                     <div class="w-full h-px bg-gray-400"></div>
                     <!-- The denominator on a new line -->
                     <div class="flex justify-center text-base mt-2">
-                        <span class="text-blue-400 font-bold whitespace-nowrap">
+                        <span class="text-cyan-metrics font-bold whitespace-nowrap">
                             <div class="flex items-center">
-                                <span class="text-blue-400 font-bold">LifetimePremium</span>
+                                <span class="text-cyan-metrics font-bold">LifetimePremium</span>
                             </div>
                         </span>
                     </div>
