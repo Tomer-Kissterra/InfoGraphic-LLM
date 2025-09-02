@@ -31,27 +31,59 @@
             background-color: transparent;
             color: #e2e8f0;
         }
-        .text-blue-beacon { color: #4dc0b5; }
-        .text-yellow-premium { color: #ffda6a; }
-        .text-cyan-metrics { color: #58a6ff; }
-        .text-good { color: #50fa7b; }
-        .text-average { color: #f1fa8c; }
-        .text-poor { color: #ff5555; }
+        .text-blue-beacon {
+            color: #4dc0b5; /* A vibrant teal color */
+        }
+        .text-yellow-premium {
+            color: #ffda6a; /* Richer gold */
+        }
+        .text-cyan-metrics {
+            color: #58a6ff; /* A strong blue */
+        }
+        .text-good { color: #50fa7b; } /* Bright green for "Good" */
+        .text-average { color: #f1fa8c; } /* Vibrant yellow for "Average" */
+        .text-poor { color: #ff5555; } /* Bold red for "Poor" */
         
-        .formula-container { font-size: 1rem; line-height: 1.5; }
-        .frac { display: inline-block; vertical-align: middle; font-size: 1em; text-align: center; }
-        .frac > span { display: block; padding: 0 0.25em; }
-        .frac > span.bar { border-bottom: 2px solid #e2e8f0; margin: 0 -0.25em; }
+        .formula-container {
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        .frac {
+            display: inline-block;
+            vertical-align: middle;
+            font-size: 1em;
+            text-align: center;
+        }
+        .frac > span {
+            display: block;
+            padding: 0 0.25em;
+        }
+        .frac > span.bar {
+            border-bottom: 2px solid #e2e8f0;
+            margin: 0 -0.25em;
+        }
         .benchmark-card {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0.75rem; border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
             cursor: pointer;
         }
-        .benchmark-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px rgba(0,0,0,0.2), 0 4px 6px rgba(0,0,0,0.1); }
-        .benchmark-level { font-weight: bold; font-size: 1rem; }
-        .score-text { font-weight: bold; font-size: 1.25rem; }
+        .benchmark-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2), 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .benchmark-level {
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .score-text {
+            font-weight: bold;
+            font-size: 1.25rem;
+        }
     </style>
 </head>
 <body class="bg-transparent text-gray-100 p-4">
@@ -171,35 +203,6 @@
             const promptTextarea = document.getElementById('gemini-prompt');
             const responseDiv = document.getElementById('gemini-response');
 
-            // --- helper: enforce max 50 words on UI side ---
-            function limitToWords(text, maxWords = 50) {
-                if (!text) return '';
-                const words = text.trim().split(/\s+/);
-                return words.length <= maxWords
-                    ? text.trim()
-                    : words.slice(0, maxWords).join(' ') + '…';
-            }
-
-            // --- helper: extract model text robustly ---
-            function extractText(result) {
-                try {
-                    const parts = result?.candidates?.[0]?.content?.parts;
-                    if (Array.isArray(parts)) {
-                        const joined = parts.map(p => (typeof p.text === 'string' ? p.text : '')).join('\n').trim();
-                        if (joined) return joined;
-                    }
-                    const direct = result?.candidates?.[0]?.text;
-                    if (typeof direct === 'string' && direct.trim()) return direct.trim();
-
-                    const outputText = result?.candidates?.[0]?.output_text;
-                    if (typeof outputText === 'string' && outputText.trim()) return outputText.trim();
-
-                    return '';
-                } catch {
-                    return '';
-                }
-            }
-
             generateBtn.addEventListener('click', async () => {
                 const userPrompt = promptTextarea.value.trim();
                 if (!userPrompt) {
@@ -209,23 +212,14 @@
 
                 responseDiv.innerHTML = '<span class="text-blue-400 animate-pulse">Generating...</span>';
                 
-                // FIX 1: Properly quoted prompt string (uses backticks)
-                const prompt = `Answer this question with short, actionable advice for a media buyer in the insurance industry. Focus only on practical steps to improve the Combined Ratio. Keep the response under 50 words, in one concise paragraph. Question: ${userPrompt}`;
+                // Add a specific instruction to the prompt to focus on Combined Ratio and the media buyer's role
+                const prompt = 'Answer this question with short, actionable advice for a media buyer in the insurance industry. Focus only on practical steps to improve the Combined Ratio. Keep the response concise, use clear bullet points, and up to 50 words. Question:' ${userPrompt};
 
-                // FIX 2: Valid JSON payload
-                const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
-                const payload = {
-                    contents: chatHistory,
-                    generationConfig: {
-                        maxOutputTokens: 90,       // encourage brevity (~50 words)
-                        temperature: 0.3,
-                        responseMimeType: "text/plain"
-                    }
-                };
-
-                // FIX 3: Properly quoted URL string
-                const apiKey = "AIzaSyDAVLC5BY2OLOUswa5e05A9h2FIOW6BISs"; // <-- replace in production
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = { contents: chatHistory };
+                const apiKey = "AIzaSyDAVLC5BY2OLOUswa5e05A9h2FIOW6BISs"; // Placeholder for your API key
+                const apiUrl = https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey};
 
                 try {
                     let response;
@@ -242,12 +236,12 @@
                                 body: JSON.stringify(payload)
                             });
                             if (response.status === 429) {
+                                // Too many requests, retry with exponential backoff
                                 const delay = initialDelay * Math.pow(2, retries);
                                 await new Promise(resolve => setTimeout(resolve, delay));
                                 retries++;
                             } else if (!response.ok) {
-                                // FIX 4: Properly quoted template string
-                                throw new Error(`HTTP error! status: ${response.status}`);
+                                throw new Error(HTTP error! status: ${response.status});
                             } else {
                                 success = true;
                             }
@@ -268,19 +262,17 @@
 
                     const result = await response.json();
                     
-                    // Extract & render (FIX 5: enforce 50 words max on UI)
-                    const text = extractText(result);
-                    if (text) {
-                        const limited = limitToWords(text, 50);
-                        responseDiv.classList.remove('flex','items-center','justify-center','text-center');
-                        responseDiv.textContent = limited;
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const text = result.candidates[0].content.parts[0].text;
+                        responseDiv.textContent = text;
                     } else {
                         responseDiv.innerHTML = '<span class="text-red-400">Could not generate a response. Please try again.</span>';
                     }
                 } catch (error) {
                     console.error('Error:', error);
-                    // FIX 6: Properly quoted innerHTML string
-                    responseDiv.innerHTML = `<span class="text-red-400">An error occurred: ${error.message}</span>`;
+                    responseDiv.innerHTML = <span class="text-red-400">An error occurred: ${error.message}</span>;
                 }
             });
         });
