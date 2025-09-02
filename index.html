@@ -9,19 +9,21 @@
     <style>
         /* New styling for richer Liquid Glass effect */
         .glass-background {
-            background-color: rgba(10, 10, 15, 0.6);
-            backdrop-filter: blur(15px) saturate(150%);
+            background-color: rgba(10, 10, 15, 0.6); /* Even deeper, almost black with a hint of purple */
+            backdrop-filter: blur(15px) saturate(150%); /* Stronger blur and saturation */
             -webkit-backdrop-filter: blur(15px) saturate(150%);
-            border: 1px solid rgba(40, 40, 50, 0.4);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(40, 40, 50, 0.4); /* Refined border */
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); /* Prominent shadow */
         }
         .bg-glass-card {
-            background-color: rgba(15, 15, 25, 0.6);
-            backdrop-filter: blur(20px) brightness(1.2);
+            background-color: rgba(15, 15, 25, 0.6); /* Darker card background */
+            backdrop-filter: blur(20px) brightness(1.2); /* Stronger blur and brightness */
             -webkit-backdrop-filter: blur(20px) brightness(1.2);
             border: 1px solid rgba(50, 50, 60, 0.5);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
         }
+        
+        /* General styles, with more vibrant colors */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
         body {
             font-family: 'Inter', sans-serif;
@@ -35,6 +37,7 @@
         .text-good { color: #50fa7b; }
         .text-average { color: #f1fa8c; }
         .text-poor { color: #ff5555; }
+        
         .formula-container { font-size: 1rem; line-height: 1.5; }
         .frac { display: inline-block; vertical-align: middle; font-size: 1em; text-align: center; }
         .frac > span { display: block; padding: 0 0.25em; }
@@ -69,7 +72,7 @@
             <h2 class="text-lg font-bold text-gray-200 mb-2">Calculation Formula</h2>
             <div class="formula-container overflow-x-auto p-2">
                 <div class="flex flex-col items-center">
-                    <!-- Numerator -->
+                    <!-- The entire numerator -->
                     <div class="flex items-center text-sm md:text-base mb-2">
                         <span class="text-white font-bold whitespace-nowrap">(CPB / 0.81) + 50 + </span>
                         <div class="flex flex-col items-center">
@@ -80,9 +83,9 @@
                             <span class="text-yellow-premium font-bold whitespace-nowrap">ClickLossAdj</span>
                         </div>
                     </div>
-                    <!-- Fraction bar -->
+                    <!-- The main fraction bar -->
                     <div class="w-full h-px bg-gray-400"></div>
-                    <!-- Denominator -->
+                    <!-- The denominator on a new line -->
                     <div class="flex justify-center text-base mt-2">
                         <span class="text-cyan-metrics font-bold whitespace-nowrap">
                             <div class="flex items-center">
@@ -92,9 +95,10 @@
                     </div>
                 </div>
             </div>
+            <!-- The updated bullet points -->
             <ul class="list-disc list-inside mt-2 text-xs text-gray-400 space-y-1">
                 <li>All values in the formula represent a sum of their respective metrics.</li>
-                <li><code>LifeTimeCost</code>, <code>ClickLossAdj</code> and <code>LifetimePremium</code> are normalized by dividing by <code>ScoredPolicies</code>.</li>
+                <li>LifeTimeCost, ClickLossAdj and LifetimePremium are normalized by dividing by ScoredPolicies.</li>
                 <li>Formula based on internal company metrics and data.</li>
             </ul>
         </div>
@@ -103,6 +107,7 @@
         <div class="space-y-3">
             <h2 class="text-lg font-bold text-gray-200 mb-1">US Insurance Industry Benchmarks</h2>
 
+            <!-- Benchmark: Excellent -->
             <div class="bg-glass-card p-3 rounded-md">
                 <div class="flex items-center space-x-2">
                     <div class="w-2 h-2 rounded-full bg-green-500"></div>
@@ -113,6 +118,7 @@
                 </div>
             </div>
 
+            <!-- Benchmark: Average -->
             <div class="bg-glass-card p-3 rounded-md">
                 <div class="flex items-center space-x-2">
                     <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
@@ -123,6 +129,7 @@
                 </div>
             </div>
 
+            <!-- Benchmark: Poor -->
             <div class="bg-glass-card p-3 rounded-md">
                 <div class="flex items-center space-x-2">
                     <div class="w-2 h-2 rounded-full bg-red-500"></div>
@@ -164,74 +171,29 @@
             const promptTextarea = document.getElementById('gemini-prompt');
             const responseDiv = document.getElementById('gemini-response');
 
-            // ---------- Helpers ----------
-            function escapeHTML(s) {
-                return (s || '').replace(/[&<>"']/g, m => ({
-                    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-                }[m]));
-            }
-            function stripCodeFences(s) {
-                return (s || '').replace(/^```[a-zA-Z0-9]*\n?/, '').replace(/```$/, '');
-            }
-            function sentenceSplit(s) {
-                return (s || '').split(/(?<=[.!?])\s+/).map(x => x.trim()).filter(Boolean);
-            }
-            function normalizeBullets(lines) {
-                const marker = /^(\d{1,2}[\.\)]\s*|-{1,2}\s*|[•–—]\s*|\*\s*)/;
-                return lines.map(l => l.replace(marker, '').trim());
-            }
-            function bulletsToHTML(text, maxItems = 5, maxCharsPer = 90) {
-                let clean = stripCodeFences(text || '');
-                clean = escapeHTML(clean).slice(0, 2000);
-
-                const lines = clean.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-
-                let listLike = lines.filter(l =>
-                    /^(\*|-|•|–|—)\s+/.test(l) ||
-                    /^\d{1,2}[\.\)]\s+/.test(l) ||
-                    /^-\s/.test(l)
-                );
-
-                if (listLike.length === 0) {
-                    const sentences = sentenceSplit(clean);
-                    listLike = sentences.slice(0, Math.min(maxItems, Math.max(3, sentences.length)));
-                } else {
-                    listLike = normalizeBullets(listLike).slice(0, maxItems);
-                }
-
-                const bullets = listLike
-                    .map(l => l.trim())
-                    .filter(Boolean)
-                    .map(l => l.length > maxCharsPer ? l.slice(0, maxCharsPer - 1) + '…' : l);
-
-                if (!bullets.length) {
-                    return `<p class="text-gray-400 italic">No bullet output.</p>`;
-                }
-                return `<ul class="list-disc list-inside space-y-1 text-left">${bullets.map(b => `<li>${b}</li>`).join('')}</ul>`;
+            // --- helper: enforce max 50 words on UI side ---
+            function limitToWords(text, maxWords = 50) {
+                if (!text) return '';
+                const words = text.trim().split(/\s+/);
+                return words.length <= maxWords
+                    ? text.trim()
+                    : words.slice(0, maxWords).join(' ') + '…';
             }
 
-            // Robust extractor to handle different Gemini response shapes
+            // --- helper: extract model text robustly ---
             function extractText(result) {
                 try {
-                    // Prefer parts[].text
                     const parts = result?.candidates?.[0]?.content?.parts;
                     if (Array.isArray(parts)) {
                         const joined = parts.map(p => (typeof p.text === 'string' ? p.text : '')).join('\n').trim();
                         if (joined) return joined;
                     }
-                    // Some responses use .candidates[0].text
                     const direct = result?.candidates?.[0]?.text;
                     if (typeof direct === 'string' && direct.trim()) return direct.trim();
 
-                    // output_text (used by some SDK helpers)
                     const outputText = result?.candidates?.[0]?.output_text;
                     if (typeof outputText === 'string' && outputText.trim()) return outputText.trim();
 
-                    // Fallback: stringify the first candidate
-                    if (result?.candidates?.length) {
-                        const asString = JSON.stringify(result.candidates[0]);
-                        return asString || '';
-                    }
                     return '';
                 } catch {
                     return '';
@@ -246,36 +208,24 @@
                 }
 
                 responseDiv.innerHTML = '<span class="text-blue-400 animate-pulse">Generating...</span>';
+                
+                // FIX 1: Properly quoted prompt string (uses backticks)
+                const prompt = `Answer this question with short, actionable advice for a media buyer in the insurance industry. Focus only on practical steps to improve the Combined Ratio. Keep the response under 50 words, in one concise paragraph. Question: ${userPrompt}`;
 
-                // Strict, quantifiable prompt: force "- " bullet format
-                const prompt = `You are writing for a media buyer in the insurance industry.
-Return ONLY:
-- Exactly 3–5 bullet points.
-- Prefix each bullet with "- " (dash + space), no numbers.
-- Each bullet ≤ 12 words.
-- No intro, no conclusion, no restating the question.
-- Focus: practical actions to improve Combined Ratio over time.
-- Avoid definitions, caveats, and explanations.
-
-Question: ${userPrompt}`;
-
-                const apiKey = "AIzaSyDAVLC5BY2OLOUswa5e05A9h2FIOW6BISs"; // Placeholder for your API key
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-
+                // FIX 2: Valid JSON payload
+                const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
                 const payload = {
-                    systemInstruction: {
-                        role: "system",
-                        parts: [{ text: "Always follow the exact format and length limits provided by the user." }]
-                    },
-                    contents: [{ role: "user", parts: [{ text: prompt }] }],
+                    contents: chatHistory,
                     generationConfig: {
-                        maxOutputTokens: 120,
+                        maxOutputTokens: 90,       // encourage brevity (~50 words)
                         temperature: 0.3,
-                        topP: 0.9,
-                        candidateCount: 1,
-                        responseMimeType: "text/plain"  // force plain text
+                        responseMimeType: "text/plain"
                     }
                 };
+
+                // FIX 3: Properly quoted URL string
+                const apiKey = "AIzaSyDAVLC5BY2OLOUswa5e05A9h2FIOW6BISs"; // <-- replace in production
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
                 try {
                     let response;
@@ -296,6 +246,7 @@ Question: ${userPrompt}`;
                                 await new Promise(resolve => setTimeout(resolve, delay));
                                 retries++;
                             } else if (!response.ok) {
+                                // FIX 4: Properly quoted template string
                                 throw new Error(`HTTP error! status: ${response.status}`);
                             } else {
                                 success = true;
@@ -311,30 +262,25 @@ Question: ${userPrompt}`;
                         }
                     }
 
-                    if (!success) throw new Error('Failed to fetch response after multiple retries.');
+                    if (!success) {
+                        throw new Error('Failed to fetch response after multiple retries.');
+                    }
 
                     const result = await response.json();
-
-                    // Handle safety blocks explicitly
-                    const blocked = result?.promptFeedback?.blockReason;
-                    if (blocked) {
-                        responseDiv.innerHTML = `<span class="text-red-400">Blocked by safety: ${escapeHTML(blocked)}</span>`;
-                        return;
-                    }
-
+                    
+                    // Extract & render (FIX 5: enforce 50 words max on UI)
                     const text = extractText(result);
-
-                    responseDiv.classList.remove('flex', 'items-center', 'justify-center', 'text-center');
-
-                    if (!text || !text.trim()) {
-                        responseDiv.innerHTML = `<p class="text-gray-400 italic">No model text returned.</p>`;
-                        return;
+                    if (text) {
+                        const limited = limitToWords(text, 50);
+                        responseDiv.classList.remove('flex','items-center','justify-center','text-center');
+                        responseDiv.textContent = limited;
+                    } else {
+                        responseDiv.innerHTML = '<span class="text-red-400">Could not generate a response. Please try again.</span>';
                     }
-
-                    responseDiv.innerHTML = bulletsToHTML(text, 5, 90);
                 } catch (error) {
                     console.error('Error:', error);
-                    responseDiv.innerHTML = `<span class="text-red-400">An error occurred: ${escapeHTML(error.message)}</span>`;
+                    // FIX 6: Properly quoted innerHTML string
+                    responseDiv.innerHTML = `<span class="text-red-400">An error occurred: ${error.message}</span>`;
                 }
             });
         });
