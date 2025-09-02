@@ -9,21 +9,19 @@
     <style>
         /* New styling for richer Liquid Glass effect */
         .glass-background {
-            background-color: rgba(10, 10, 15, 0.6); /* Even deeper, almost black with a hint of purple */
-            backdrop-filter: blur(15px) saturate(150%); /* Stronger blur and saturation */
+            background-color: rgba(10, 10, 15, 0.6);
+            backdrop-filter: blur(15px) saturate(150%);
             -webkit-backdrop-filter: blur(15px) saturate(150%);
-            border: 1px solid rgba(40, 40, 50, 0.4); /* Refined border */
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); /* Prominent shadow */
+            border: 1px solid rgba(40, 40, 50, 0.4);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
         }
         .bg-glass-card {
-            background-color: rgba(15, 15, 25, 0.6); /* Darker card background */
-            backdrop-filter: blur(20px) brightness(1.2); /* Stronger blur and brightness */
+            background-color: rgba(15, 15, 25, 0.6);
+            backdrop-filter: blur(20px) brightness(1.2);
             -webkit-backdrop-filter: blur(20px) brightness(1.2);
             border: 1px solid rgba(50, 50, 60, 0.5);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
         }
-        
-        /* General styles, with more vibrant colors */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
         body {
             font-family: 'Inter', sans-serif;
@@ -31,59 +29,26 @@
             background-color: transparent;
             color: #e2e8f0;
         }
-        .text-blue-beacon {
-            color: #4dc0b5; /* A vibrant teal color */
-        }
-        .text-yellow-premium {
-            color: #ffda6a; /* Richer gold */
-        }
-        .text-cyan-metrics {
-            color: #58a6ff; /* A strong blue */
-        }
-        .text-good { color: #50fa7b; } /* Bright green for "Good" */
-        .text-average { color: #f1fa8c; } /* Vibrant yellow for "Average" */
-        .text-poor { color: #ff5555; } /* Bold red for "Poor" */
-        
-        .formula-container {
-            font-size: 1rem;
-            line-height: 1.5;
-        }
-        .frac {
-            display: inline-block;
-            vertical-align: middle;
-            font-size: 1em;
-            text-align: center;
-        }
-        .frac > span {
-            display: block;
-            padding: 0 0.25em;
-        }
-        .frac > span.bar {
-            border-bottom: 2px solid #e2e8f0;
-            margin: 0 -0.25em;
-        }
+        .text-blue-beacon { color: #4dc0b5; }
+        .text-yellow-premium { color: #ffda6a; }
+        .text-cyan-metrics { color: #58a6ff; }
+        .text-good { color: #50fa7b; }
+        .text-average { color: #f1fa8c; }
+        .text-poor { color: #ff5555; }
+        .formula-container { font-size: 1rem; line-height: 1.5; }
+        .frac { display: inline-block; vertical-align: middle; font-size: 1em; text-align: center; }
+        .frac > span { display: block; padding: 0 0.25em; }
+        .frac > span.bar { border-bottom: 2px solid #e2e8f0; margin: 0 -0.25em; }
         .benchmark-card {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0.75rem; border-radius: 0.5rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
             cursor: pointer;
         }
-        .benchmark-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2), 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .benchmark-level {
-            font-weight: bold;
-            font-size: 1rem;
-        }
-        .score-text {
-            font-weight: bold;
-            font-size: 1.25rem;
-        }
+        .benchmark-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px rgba(0,0,0,0.2), 0 4px 6px rgba(0,0,0,0.1); }
+        .benchmark-level { font-weight: bold; font-size: 1rem; }
+        .score-text { font-weight: bold; font-size: 1.25rem; }
     </style>
 </head>
 <body class="bg-transparent text-gray-100 p-4">
@@ -104,7 +69,7 @@
             <h2 class="text-lg font-bold text-gray-200 mb-2">Calculation Formula</h2>
             <div class="formula-container overflow-x-auto p-2">
                 <div class="flex flex-col items-center">
-                    <!-- The entire numerator -->
+                    <!-- Numerator -->
                     <div class="flex items-center text-sm md:text-base mb-2">
                         <span class="text-white font-bold whitespace-nowrap">(CPB / 0.81) + 50 + </span>
                         <div class="flex flex-col items-center">
@@ -115,9 +80,9 @@
                             <span class="text-yellow-premium font-bold whitespace-nowrap">ClickLossAdj</span>
                         </div>
                     </div>
-                    <!-- The main fraction bar -->
+                    <!-- Fraction bar -->
                     <div class="w-full h-px bg-gray-400"></div>
-                    <!-- The denominator on a new line -->
+                    <!-- Denominator -->
                     <div class="flex justify-center text-base mt-2">
                         <span class="text-cyan-metrics font-bold whitespace-nowrap">
                             <div class="flex items-center">
@@ -127,10 +92,9 @@
                     </div>
                 </div>
             </div>
-            <!-- The updated bullet points -->
             <ul class="list-disc list-inside mt-2 text-xs text-gray-400 space-y-1">
                 <li>All values in the formula represent a sum of their respective metrics.</li>
-                <li>`LifeTimeCost`, `ClickLossAdj` and `LifetimePremium` are normalized by dividing by `ScoredPolicies`.</li>
+                <li><code>LifeTimeCost</code>, <code>ClickLossAdj</code> and <code>LifetimePremium</code> are normalized by dividing by <code>ScoredPolicies</code>.</li>
                 <li>Formula based on internal company metrics and data.</li>
             </ul>
         </div>
@@ -139,7 +103,6 @@
         <div class="space-y-3">
             <h2 class="text-lg font-bold text-gray-200 mb-1">US Insurance Industry Benchmarks</h2>
 
-            <!-- Benchmark: Excellent -->
             <div class="bg-glass-card p-3 rounded-md">
                 <div class="flex items-center space-x-2">
                     <div class="w-2 h-2 rounded-full bg-green-500"></div>
@@ -150,7 +113,6 @@
                 </div>
             </div>
 
-            <!-- Benchmark: Average -->
             <div class="bg-glass-card p-3 rounded-md">
                 <div class="flex items-center space-x-2">
                     <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
@@ -161,7 +123,6 @@
                 </div>
             </div>
 
-            <!-- Benchmark: Poor -->
             <div class="bg-glass-card p-3 rounded-md">
                 <div class="flex items-center space-x-2">
                     <div class="w-2 h-2 rounded-full bg-red-500"></div>
@@ -203,58 +164,41 @@
             const promptTextarea = document.getElementById('gemini-prompt');
             const responseDiv = document.getElementById('gemini-response');
 
-            // --- Helper functions for strict bullet rendering (robust) ---
+            // ---------- Helpers ----------
             function escapeHTML(s) {
                 return (s || '').replace(/[&<>"']/g, m => ({
                     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
                 }[m]));
             }
-
             function stripCodeFences(s) {
-                // Remove leading/trailing code fences if the model wrapped output
-                return (s || '').replace(/^```[\s\S]*?\n/, '').replace(/```$/, '');
+                return (s || '').replace(/^```[a-zA-Z0-9]*\n?/, '').replace(/```$/, '');
             }
-
             function sentenceSplit(s) {
-                // Lightweight sentence split; good enough for short outputs
-                return (s || '')
-                    .split(/(?<=[.!?])\s+/)
-                    .map(x => x.trim())
-                    .filter(Boolean);
+                return (s || '').split(/(?<=[.!?])\s+/).map(x => x.trim()).filter(Boolean);
             }
-
             function normalizeBullets(lines) {
-                // Convert various list markers to plain text items
-                // Matches: "1.", "2)", "- ", "-- ", "• ", "– ", "— ", "* "
                 const marker = /^(\d{1,2}[\.\)]\s*|-{1,2}\s*|[•–—]\s*|\*\s*)/;
                 return lines.map(l => l.replace(marker, '').trim());
             }
-
             function bulletsToHTML(text, maxItems = 5, maxCharsPer = 90) {
-                if (!text) return `<p class="text-gray-400 italic">No bullet output.</p>`;
+                let clean = stripCodeFences(text || '');
+                clean = escapeHTML(clean).slice(0, 2000);
 
-                let clean = stripCodeFences(text);
-                clean = escapeHTML(clean).slice(0, 1600); // UI-level hard cap
-
-                // Split into lines and trim
                 const lines = clean.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
 
-                // 1) Try to capture list-like lines (dash/star/dot/numbered)
                 let listLike = lines.filter(l =>
-                    /^(\*|-|•|–|—)\s+/.test(l) ||   // common bullet markers
-                    /^\d{1,2}[\.\)]\s+/.test(l) ||  // numbered like "1. " or "2) "
-                    /^-\s/.test(l)                  // explicit "- "
+                    /^(\*|-|•|–|—)\s+/.test(l) ||
+                    /^\d{1,2}[\.\)]\s+/.test(l) ||
+                    /^-\s/.test(l)
                 );
 
-                // 2) If none found, attempt to parse paragraphs into sentences
                 if (listLike.length === 0) {
                     const sentences = sentenceSplit(clean);
-                    listLike = sentences.slice(0, Math.min(5, sentences.length || 3));
+                    listLike = sentences.slice(0, Math.min(maxItems, Math.max(3, sentences.length)));
                 } else {
                     listLike = normalizeBullets(listLike).slice(0, maxItems);
                 }
 
-                // Final trim + clip each item
                 const bullets = listLike
                     .map(l => l.trim())
                     .filter(Boolean)
@@ -266,6 +210,34 @@
                 return `<ul class="list-disc list-inside space-y-1 text-left">${bullets.map(b => `<li>${b}</li>`).join('')}</ul>`;
             }
 
+            // Robust extractor to handle different Gemini response shapes
+            function extractText(result) {
+                try {
+                    // Prefer parts[].text
+                    const parts = result?.candidates?.[0]?.content?.parts;
+                    if (Array.isArray(parts)) {
+                        const joined = parts.map(p => (typeof p.text === 'string' ? p.text : '')).join('\n').trim();
+                        if (joined) return joined;
+                    }
+                    // Some responses use .candidates[0].text
+                    const direct = result?.candidates?.[0]?.text;
+                    if (typeof direct === 'string' && direct.trim()) return direct.trim();
+
+                    // output_text (used by some SDK helpers)
+                    const outputText = result?.candidates?.[0]?.output_text;
+                    if (typeof outputText === 'string' && outputText.trim()) return outputText.trim();
+
+                    // Fallback: stringify the first candidate
+                    if (result?.candidates?.length) {
+                        const asString = JSON.stringify(result.candidates[0]);
+                        return asString || '';
+                    }
+                    return '';
+                } catch {
+                    return '';
+                }
+            }
+
             generateBtn.addEventListener('click', async () => {
                 const userPrompt = promptTextarea.value.trim();
                 if (!userPrompt) {
@@ -275,7 +247,7 @@
 
                 responseDiv.innerHTML = '<span class="text-blue-400 animate-pulse">Generating...</span>';
 
-                // Strict, quantifiable prompt: force "- " prefix; no numbering
+                // Strict, quantifiable prompt: force "- " bullet format
                 const prompt = `You are writing for a media buyer in the insurance industry.
 Return ONLY:
 - Exactly 3–5 bullet points.
@@ -297,11 +269,11 @@ Question: ${userPrompt}`;
                     },
                     contents: [{ role: "user", parts: [{ text: prompt }] }],
                     generationConfig: {
-                        maxOutputTokens: 120,      // short list cap
-                        temperature: 0.4,
+                        maxOutputTokens: 120,
+                        temperature: 0.3,
                         topP: 0.9,
                         candidateCount: 1,
-                        stopSequences: ["\n\n\n"]  // optional safeguard
+                        responseMimeType: "text/plain"  // force plain text
                     }
                 };
 
@@ -339,22 +311,26 @@ Question: ${userPrompt}`;
                         }
                     }
 
-                    if (!success) {
-                        throw new Error('Failed to fetch response after multiple retries.');
-                    }
+                    if (!success) throw new Error('Failed to fetch response after multiple retries.');
 
                     const result = await response.json();
 
-                    // Extract text safely
-                    let text = "";
-                    if (result?.candidates?.[0]?.content?.parts?.length) {
-                        text = result.candidates[0].content.parts
-                            .map(p => (typeof p.text === "string" ? p.text : ""))
-                            .join("\n");
+                    // Handle safety blocks explicitly
+                    const blocked = result?.promptFeedback?.blockReason;
+                    if (blocked) {
+                        responseDiv.innerHTML = `<span class="text-red-400">Blocked by safety: ${escapeHTML(blocked)}</span>`;
+                        return;
                     }
 
-                    // Render as bullets (enforced UI format)
+                    const text = extractText(result);
+
                     responseDiv.classList.remove('flex', 'items-center', 'justify-center', 'text-center');
+
+                    if (!text || !text.trim()) {
+                        responseDiv.innerHTML = `<p class="text-gray-400 italic">No model text returned.</p>`;
+                        return;
+                    }
+
                     responseDiv.innerHTML = bulletsToHTML(text, 5, 90);
                 } catch (error) {
                     console.error('Error:', error);
