@@ -203,27 +203,62 @@
             const promptTextarea = document.getElementById('gemini-prompt');
             const responseDiv = document.getElementById('gemini-response');
 
-            // --- Helper functions for strict bullet rendering (UI guardrail) ---
+            // --- Helper functions for strict bullet rendering (robust) ---
             function escapeHTML(s) {
-                return s.replace(/[&<>"']/g, m => ({
-                    '&': '&amp;',
-                    '<': '&lt;',
-                    '>': '&gt;',
-                    '"': '&quot;',
-                    "'": '&#39;'
+                return (s || '').replace(/[&<>"']/g, m => ({
+                    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
                 }[m]));
             }
 
-            function bulletsToHTML(text) {
-                const safe = escapeHTML(text || '').slice(0, 800); // UI-level hard cap
-                const lines = safe.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+            function stripCodeFences(s) {
+                // Remove leading/trailing code fences if the model wrapped output
+                return (s || '').replace(/^```[\s\S]*?\n/, '').replace(/```$/, '');
+            }
 
-                // Keep only bullet-like lines, cap to 5 bullets, and cap each line length
-                const bullets = lines
-                    .filter(l => /^[-*•]/.test(l))
-                    .slice(0, 5)
-                    .map(l => l.replace(/^[-*•]\s?/, ''))
-                    .map(l => l.length > 80 ? l.slice(0, 77) + '…' : l);
+            function sentenceSplit(s) {
+                // Lightweight sentence split; good enough for short outputs
+                return (s || '')
+                    .split(/(?<=[.!?])\s+/)
+                    .map(x => x.trim())
+                    .filter(Boolean);
+            }
+
+            function normalizeBullets(lines) {
+                // Convert various list markers to plain text items
+                // Matches: "1.", "2)", "- ", "-- ", "• ", "– ", "— ", "* "
+                const marker = /^(\d{1,2}[\.\)]\s*|-{1,2}\s*|[•–—]\s*|\*\s*)/;
+                return lines.map(l => l.replace(marker, '').trim());
+            }
+
+            function bulletsToHTML(text, maxItems = 5, maxCharsPer = 90) {
+                if (!text) return `<p class="text-gray-400 italic">No bullet output.</p>`;
+
+                let clean = stripCodeFences(text);
+                clean = escapeHTML(clean).slice(0, 1600); // UI-level hard cap
+
+                // Split into lines and trim
+                const lines = clean.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+
+                // 1) Try to capture list-like lines (dash/star/dot/numbered)
+                let listLike = lines.filter(l =>
+                    /^(\*|-|•|–|—)\s+/.test(l) ||   // common bullet markers
+                    /^\d{1,2}[\.\)]\s+/.test(l) ||  // numbered like "1. " or "2) "
+                    /^-\s/.test(l)                  // explicit "- "
+                );
+
+                // 2) If none found, attempt to parse paragraphs into sentences
+                if (listLike.length === 0) {
+                    const sentences = sentenceSplit(clean);
+                    listLike = sentences.slice(0, Math.min(5, sentences.length || 3));
+                } else {
+                    listLike = normalizeBullets(listLike).slice(0, maxItems);
+                }
+
+                // Final trim + clip each item
+                const bullets = listLike
+                    .map(l => l.trim())
+                    .filter(Boolean)
+                    .map(l => l.length > maxCharsPer ? l.slice(0, maxCharsPer - 1) + '…' : l);
 
                 if (!bullets.length) {
                     return `<p class="text-gray-400 italic">No bullet output.</p>`;
@@ -240,13 +275,14 @@
 
                 responseDiv.innerHTML = '<span class="text-blue-400 animate-pulse">Generating...</span>';
 
-                // Strict, quantifiable prompt
+                // Strict, quantifiable prompt: force "- " prefix; no numbering
                 const prompt = `You are writing for a media buyer in the insurance industry.
 Return ONLY:
-- A single bulleted list of 5 items max.
+- Exactly 3–5 bullet points.
+- Prefix each bullet with "- " (dash + space), no numbers.
 - Each bullet ≤ 12 words.
 - No intro, no conclusion, no restating the question.
-- Focus: practical actions to improve Combined Ratio if asked by user prompt.
+- Focus: practical actions to improve Combined Ratio over time.
 - Avoid definitions, caveats, and explanations.
 
 Question: ${userPrompt}`;
@@ -254,19 +290,18 @@ Question: ${userPrompt}`;
                 const apiKey = "AIzaSyDAVLC5BY2OLOUswa5e05A9h2FIOW6BISs"; // Placeholder for your API key
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
-                // Payload with generationConfig to cap output
                 const payload = {
                     systemInstruction: {
                         role: "system",
-                        parts: [{ text: "Always follow the exact format and length limits given by the user." }]
+                        parts: [{ text: "Always follow the exact format and length limits provided by the user." }]
                     },
                     contents: [{ role: "user", parts: [{ text: prompt }] }],
                     generationConfig: {
-                        maxOutputTokens: 120,    // short list
+                        maxOutputTokens: 120,      // short list cap
                         temperature: 0.4,
                         topP: 0.9,
                         candidateCount: 1,
-                        stopSequences: ["\n\n\n"] // optional safeguard
+                        stopSequences: ["\n\n\n"]  // optional safeguard
                     }
                 };
 
@@ -320,7 +355,7 @@ Question: ${userPrompt}`;
 
                     // Render as bullets (enforced UI format)
                     responseDiv.classList.remove('flex', 'items-center', 'justify-center', 'text-center');
-                    responseDiv.innerHTML = bulletsToHTML(text);
+                    responseDiv.innerHTML = bulletsToHTML(text, 5, 90);
                 } catch (error) {
                     console.error('Error:', error);
                     responseDiv.innerHTML = `<span class="text-red-400">An error occurred: ${escapeHTML(error.message)}</span>`;
