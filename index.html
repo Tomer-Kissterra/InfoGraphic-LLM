@@ -1,281 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Combined Ratio Tooltip</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* New styling for richer Liquid Glass effect */
-        .glass-background {
-            background-color: rgba(10, 10, 15, 0.6); /* Even deeper, almost black with a hint of purple */
-            backdrop-filter: blur(15px) saturate(150%); /* Stronger blur and saturation */
-            -webkit-backdrop-filter: blur(15px) saturate(150%);
-            border: 1px solid rgba(40, 40, 50, 0.4); /* Refined border */
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); /* Prominent shadow */
-        }
-        .bg-glass-card {
-            background-color: rgba(15, 15, 25, 0.6); /* Darker card background */
-            backdrop-filter: blur(20px) brightness(1.2); /* Stronger blur and brightness */
-            -webkit-backdrop-filter: blur(20px) brightness(1.2);
-            border: 1px solid rgba(50, 50, 60, 0.5);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-        }
-        
-        /* General styles, with more vibrant colors */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            text-align: left;
-            background-color: transparent;
-            color: #e2e8f0;
-        }
-        .text-blue-beacon {
-            color: #4dc0b5; /* A vibrant teal color */
-        }
-        .text-yellow-premium {
-            color: #ffda6a; /* Richer gold */
-        }
-        .text-cyan-metrics {
-            color: #58a6ff; /* A strong blue */
-        }
-        .text-good { color: #50fa7b; } /* Bright green for "Good" */
-        .text-average { color: #f1fa8c; } /* Vibrant yellow for "Average" */
-        .text-poor { color: #ff5555; } /* Bold red for "Poor" */
-        
-        .formula-container {
-            font-size: 1rem;
-            line-height: 1.5;
-        }
-        .frac {
-            display: inline-block;
-            vertical-align: middle;
-            font-size: 1em;
-            text-align: center;
-        }
-        .frac > span {
-            display: block;
-            padding: 0 0.25em;
-        }
-        .frac > span.bar {
-            border-bottom: 2px solid #e2e8f0;
-            margin: 0 -0.25em;
-        }
-        .benchmark-card {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-            cursor: pointer;
-        }
-        .benchmark-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2), 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .benchmark-level {
-            font-weight: bold;
-            font-size: 1rem;
-        }
-        .score-text {
-            font-weight: bold;
-            font-size: 1.25rem;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Combined Ratio Tooltip</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Liquid Glass */
+    .glass-background {
+      background-color: rgba(10, 10, 15, 0.6);
+      backdrop-filter: blur(15px) saturate(150%);
+      -webkit-backdrop-filter: blur(15px) saturate(150%);
+      border: 1px solid rgba(40, 40, 50, 0.4);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+    .bg-glass-card {
+      background-color: rgba(15, 15, 25, 0.6);
+      backdrop-filter: blur(20px) brightness(1.2);
+      -webkit-backdrop-filter: blur(20px) brightness(1.2);
+      border: 1px solid rgba(50, 50, 60, 0.5);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    /* General */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+    body { font-family: 'Inter', sans-serif; background-color: transparent; color: #e2e8f0; }
+    .text-blue-beacon { color: #4dc0b5; }
+    .text-yellow-premium { color: #ffda6a; }
+    .text-cyan-metrics { color: #58a6ff; }
+    .text-good { color: #50fa7b; }
+    .text-average { color: #f1fa8c; }
+    .text-poor { color: #ff5555; }
+
+    .formula-container { font-size: 1rem; line-height: 1.5; }
+    .frac { display: inline-block; vertical-align: middle; font-size: 1em; text-align: center; }
+    .frac > span { display: block; padding: 0 0.25em; }
+    .frac > span.bar { border-bottom: 2px solid #e2e8f0; margin: 0 -0.25em; }
+
+    .benchmark-card {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.75rem; border-radius: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08);
+      transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;
+    }
+    .benchmark-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px rgba(0,0,0,0.2), 0 4px 6px rgba(0,0,0,0.1); }
+    .benchmark-level { font-weight: bold; font-size: 1rem; }
+    .score-text { font-weight: bold; font-size: 1.25rem; }
+  </style>
 </head>
 <body class="bg-transparent text-gray-100 p-4">
-
-    <div class="max-w-md mx-auto w-full space-y-4 glass-background p-6 rounded-2xl">
-
-        <!-- Header and Description -->
-        <div class="text-center pb-2 border-b border-gray-700">
-            <h1 class="text-xl font-bold text-blue-beacon">Combined Ratio</h1>
-            <p class="mt-1 text-gray-300 text-sm">
-                A key metric for evaluating an insurance company's operating profitability.
-                A lower score indicates better performance.
-            </p>
-        </div>
-
-        <!-- Formula -->
-        <div class="bg-glass-card p-4 rounded-md">
-            <h2 class="text-lg font-bold text-gray-200 mb-2">Calculation Formula</h2>
-            <div class="formula-container overflow-x-auto p-2">
-                <div class="flex flex-col items-center">
-                    <!-- The entire numerator -->
-                    <div class="flex items-center text-sm md:text-base mb-2">
-                        <span class="text-white font-bold whitespace-nowrap">(CPB / 0.81) + 50 + </span>
-                        <div class="flex flex-col items-center">
-                            <span class="text-yellow-premium font-bold whitespace-nowrap">LifeTimeCost</span>
-                        </div>
-                        <span class="text-base font-bold mx-1">×</span>
-                        <div class="flex flex-col items-center">
-                            <span class="text-yellow-premium font-bold whitespace-nowrap">ClickLossAdj</span>
-                        </div>
-                    </div>
-                    <!-- The main fraction bar -->
-                    <div class="w-full h-px bg-gray-400"></div>
-                    <!-- The denominator on a new line -->
-                    <div class="flex justify-center text-base mt-2">
-                        <span class="text-cyan-metrics font-bold whitespace-nowrap">
-                            <div class="flex items-center">
-                                <span class="text-cyan-metrics font-bold">LifetimePremium</span>
-                            </div>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <!-- The updated bullet points -->
-            <ul class="list-disc list-inside mt-2 text-xs text-gray-400 space-y-1">
-                <li>All values in the formula represent a sum of their respective metrics.</li>
-                <li>LifeTimeCost, ClickLossAdj and LifetimePremium are normalized by dividing by ScoredPolicies.</li>
-                <li>Formula based on internal company metrics and data.</li>
-            </ul>
-        </div>
-
-        <!-- Benchmarks -->
-        <div class="space-y-3">
-            <h2 class="text-lg font-bold text-gray-200 mb-1">US Insurance Industry Benchmarks</h2>
-
-            <!-- Benchmark: Excellent -->
-            <div class="bg-glass-card p-3 rounded-md">
-                <div class="flex items-center space-x-2">
-                    <div class="w-2 h-2 rounded-full bg-green-500"></div>
-                    <span class="font-bold text-good">Good</span>
-                </div>
-                <div class="text-gray-300">
-                    <span class="font-bold text-xl text-good">Below 95%</span>
-                </div>
-            </div>
-
-            <!-- Benchmark: Average -->
-            <div class="bg-glass-card p-3 rounded-md">
-                <div class="flex items-center space-x-2">
-                    <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
-                    <span class="font-bold text-average">Average</span>
-                </div>
-                <div class="text-gray-300">
-                    <span class="font-bold text-xl text-average">95% - 100%</span>
-                </div>
-            </div>
-
-            <!-- Benchmark: Poor -->
-            <div class="bg-glass-card p-3 rounded-md">
-                <div class="flex items-center space-x-2">
-                    <div class="w-2 h-2 rounded-full bg-red-500"></div>
-                    <span class="font-bold text-poor">Poor</span>
-                </div>
-                <div class="text-gray-300">
-                    <span class="font-bold text-xl text-poor">Above 100%</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Note -->
-        <div class="bg-glass-card p-3 rounded-md mt-4">
-            <p class="text-xs text-gray-400">
-                *Note: Combined Ratio does not include investment income.
-                A score below 100% indicates that the company is profitable from its core operations (claims and expenses).
-            </p>
-        </div>
-
-        <!-- Ask Gemini Section -->
-        <div class="bg-glass-card p-3 rounded-md mt-4">
-            <h2 class="text-base font-bold text-blue-300 mb-1 border-b-2 border-blue-300 pb-1">Ask AI about Combined Ratio</h2>
-            <div class="space-y-3">
-                <textarea id="gemini-prompt" class="w-full h-20 p-2 bg-gray-700 text-gray-200 rounded-md placeholder-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" placeholder="Ask a question about improving Combined Ratio as a media buyer..."></textarea>
-                <button id="generate-btn" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-md shadow-lg hover:bg-blue-700 transition-colors duration-300 text-sm">
-                    Get Answer
-                </button>
-                <div id="gemini-response" class="mt-2 p-2 bg-gray-700 rounded-md text-gray-300 min-h-[4rem] flex items-center justify-center text-center text-xs">
-                    <span class="text-gray-500 italic">Your answer will appear here.</span>
-                </div>
-            </div>
-        </div>
-
+  <div class="max-w-md mx-auto w-full space-y-4 glass-background p-6 rounded-2xl">
+    <!-- Header -->
+    <div class="text-center pb-2 border-b border-gray-700">
+      <h1 class="text-xl font-bold text-blue-beacon">Combined Ratio</h1>
+      <p class="mt-1 text-gray-300 text-sm">
+        A key metric for evaluating an insurance company's operating profitability.
+        A lower score indicates better performance.
+      </p>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const generateBtn = document.getElementById('generate-btn');
-            const promptTextarea = document.getElementById('gemini-prompt');
-            const responseDiv = document.getElementById('gemini-response');
+    <!-- Formula -->
+    <div class="bg-glass-card p-4 rounded-md">
+      <h2 class="text-lg font-bold text-gray-200 mb-2">Calculation Formula</h2>
+      <div class="formula-container overflow-x-auto p-2">
+        <div class="flex flex-col items-center">
+          <!-- Numerator -->
+          <div class="flex items-center text-sm md:text-base mb-2">
+            <span class="text-white font-bold whitespace-nowrap">(CPB / 0.81) + 50 + </span>
+            <div class="flex flex-col items-center">
+              <span class="text-yellow-premium font-bold whitespace-nowrap">LifeTimeCost</span>
+            </div>
+            <span class="text-base font-bold mx-1">×</span>
+            <div class="flex flex-col items-center">
+              <span class="text-yellow-premium font-bold whitespace-nowrap">ClickLossAdj</span>
+            </div>
+          </div>
+          <!-- Fraction bar -->
+          <div class="w-full h-px bg-gray-400"></div>
+          <!-- Denominator (fixed invalid span/div nesting) -->
+          <div class="flex justify-center text-base mt-2">
+            <div class="text-cyan-metrics font-bold whitespace-nowrap">
+              <div class="flex items-center">
+                <span class="text-cyan-metrics font-bold">LifetimePremium</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ul class="list-disc list-inside mt-2 text-xs text-gray-400 space-y-1">
+        <li>All values in the formula represent a sum of their respective metrics.</li>
+        <li>LifeTimeCost, ClickLossAdj and LifetimePremium are normalized by dividing by ScoredPolicies.</li>
+        <li>Formula based on internal company metrics and data.</li>
+      </ul>
+    </div>
 
-            generateBtn.addEventListener('click', async () => {
-                const userPrompt = promptTextarea.value.trim();
-                if (!userPrompt) {
-                    responseDiv.innerHTML = '<span class="text-red-400">Please enter a question.</span>';
-                    return;
-                }
+    <!-- Benchmarks -->
+    <div class="space-y-3">
+      <h2 class="text-lg font-bold text-gray-200 mb-1">US Insurance Industry Benchmarks</h2>
 
-                responseDiv.innerHTML = '<span class="text-blue-400 animate-pulse">Generating...</span>';
-                
-                // Add a specific instruction to the prompt to focus on Combined Ratio and the media buyer's role
-                const prompt = 'Answer this question with short, actionable advice for a media buyer in the insurance industry. Focus only on practical steps to improve the Combined Ratio. Keep the response concise, use clear bullet points, and up to 50 words. Question:' ${userPrompt};
+      <div class="bg-glass-card p-3 rounded-md">
+        <div class="flex items-center space-x-2">
+          <div class="w-2 h-2 rounded-full bg-green-500"></div>
+          <span class="font-bold text-good">Good</span>
+        </div>
+        <div class="text-gray-300">
+          <span class="font-bold text-xl text-good">Below 95%</span>
+        </div>
+      </div>
 
-                let chatHistory = [];
-                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-                const payload = { contents: chatHistory };
-                const apiKey = "AIzaSyDAVLC5BY2OLOUswa5e05A9h2FIOW6BISs"; // Placeholder for your API key
-                const apiUrl = https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey};
+      <div class="bg-glass-card p-3 rounded-md">
+        <div class="flex items-center space-x-2">
+          <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
+          <span class="font-bold text-average">Average</span>
+        </div>
+        <div class="text-gray-300">
+          <span class="font-bold text-xl text-average">95% - 100%</span>
+        </div>
+      </div>
 
-                try {
-                    let response;
-                    let success = false;
-                    let retries = 0;
-                    const maxRetries = 5;
-                    const initialDelay = 1000;
+      <div class="bg-glass-card p-3 rounded-md">
+        <div class="flex items-center space-x-2">
+          <div class="w-2 h-2 rounded-full bg-red-500"></div>
+          <span class="font-bold text-poor">Poor</span>
+        </div>
+        <div class="text-gray-300">
+          <span class="font-bold text-xl text-poor">Above 100%</span>
+        </div>
+      </div>
+    </div>
 
-                    while (!success && retries < maxRetries) {
-                        try {
-                            response = await fetch(apiUrl, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify(payload)
-                            });
-                            if (response.status === 429) {
-                                // Too many requests, retry with exponential backoff
-                                const delay = initialDelay * Math.pow(2, retries);
-                                await new Promise(resolve => setTimeout(resolve, delay));
-                                retries++;
-                            } else if (!response.ok) {
-                                throw new Error(HTTP error! status: ${response.status});
-                            } else {
-                                success = true;
-                            }
-                        } catch (error) {
-                            if (retries < maxRetries - 1) {
-                                const delay = initialDelay * Math.pow(2, retries);
-                                await new Promise(resolve => setTimeout(resolve, delay));
-                                retries++;
-                            } else {
-                                throw error;
-                            }
-                        }
-                    }
+    <!-- Note -->
+    <div class="bg-glass-card p-3 rounded-md mt-4">
+      <p class="text-xs text-gray-400">
+        *Note: Combined Ratio does not include investment income.
+        A score below 100% indicates that the company is profitable from its core operations (claims and expenses).
+      </p>
+    </div>
 
-                    if (!success) {
-                        throw new Error('Failed to fetch response after multiple retries.');
-                    }
+    <!-- Ask AI -->
+    <div class="bg-glass-card p-3 rounded-md mt-4">
+      <h2 class="text-base font-bold text-blue-300 mb-1 border-b-2 border-blue-300 pb-1">Ask AI about Combined Ratio</h2>
+      <div class="space-y-3">
+        <textarea id="gemini-prompt" class="w-full h-20 p-2 bg-gray-700 text-gray-200 rounded-md placeholder-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" placeholder="Ask a question about improving Combined Ratio as a media buyer..."></textarea>
+        <button id="generate-btn" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-md shadow-lg hover:bg-blue-700 transition-colors duration-300 text-sm">
+          Get Answer
+        </button>
+        <div id="gemini-response" class="mt-2 p-2 bg-gray-700 rounded-md text-gray-300 min-h-[4rem] flex items-center justify-center text-center text-xs">
+          <span class="text-gray-500 italic">Your answer will appear here.</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-                    const result = await response.json();
-                    
-                    if (result.candidates && result.candidates.length > 0 &&
-                        result.candidates[0].content && result.candidates[0].content.parts &&
-                        result.candidates[0].content.parts.length > 0) {
-                        const text = result.candidates[0].content.parts[0].text;
-                        responseDiv.textContent = text;
-                    } else {
-                        responseDiv.innerHTML = '<span class="text-red-400">Could not generate a response. Please try again.</span>';
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    responseDiv.innerHTML = <span class="text-red-400">An error occurred: ${error.message}</span>;
-                }
-            });
-        });
-    </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const generateBtn = document.getElementById('generate-btn');
+      const promptTextarea = document.getElementById('gemini-prompt');
+      const responseDiv = document.getElementById('gemini-response');
+
+      generateBtn.addEventListener('click', async () => {
+        const userPrompt = promptTextarea.value.trim();
+        if (!userPrompt) {
+          responseDiv.innerHTML = '<span class="text-red-400">Please enter a question.</span>';
+          return;
+        }
+
+        responseDiv.innerHTML = '<span class="text-blue-400 animate-pulse">Generating...</span>';
+
+        // Build prompt (fixed template literal)
+        const prompt = `Answer this question with short, actionable advice for a media buyer in the insurance industry. Focus only on practical steps to improve the Combined Ratio. Keep the response concise, use clear bullet points, and up to 50 words. Question: ${userPrompt}`;
+
+        // Construct payload per Google GenLang API
+        const payload = {
+          contents: [
+            { role: "user", parts: [{ text: prompt }] }
+          ]
+        };
+
+        // TODO: move this to your backend; do NOT expose real keys in frontend code
+        const apiKey = "YOUR_API_KEY_HERE";
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+        try {
+          let response;
+          let success = false;
+          let retries = 0;
+          const maxRetries = 5;
+          const initialDelay = 1000;
+
+          while (!success && retries < maxRetries) {
+            try {
+              response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+              });
+
+              if (response.status === 429) {
+                const delay = initialDelay * Math.pow(2, retries);
+                await new Promise(resolve => setTimeout(resolve, delay));
+                retries++;
+              } else if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+              } else {
+                success = true;
+              }
+            } catch (err) {
+              if (retries < maxRetries - 1) {
+                const delay = initialDelay * Math.pow(2, retries);
+                await new Promise(resolve => setTimeout(resolve, delay));
+                retries++;
+              } else {
+                throw err;
+              }
+            }
+          }
+
+          if (!success) {
+            throw new Error('Failed to fetch response after multiple retries.');
+          }
+
+          const result = await response.json();
+
+          // Safely read response shape
+          const text =
+            result?.candidates?.[0]?.content?.parts?.[0]?.text ??
+            result?.candidates?.[0]?.output_text ??
+            null;
+
+          if (text) {
+            // Simple formatting: turn leading dashes into list
+            const html = text
+              .split('\n')
+              .map(line => line.replace(/^- /, '• '))
+              .map(line => `<div>${line}</div>`)
+              .join('');
+            responseDiv.innerHTML = html;
+          } else {
+            responseDiv.innerHTML = '<span class="text-red-400">Could not generate a response. Please try again.</span>';
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          responseDiv.innerHTML = `<span class="text-red-400">An error occurred: ${error.message}</span>`;
+        }
+      });
+    });
+  </script>
 </body>
 </html>
