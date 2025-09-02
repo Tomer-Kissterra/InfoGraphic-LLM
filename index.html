@@ -203,6 +203,34 @@
             const promptTextarea = document.getElementById('gemini-prompt');
             const responseDiv = document.getElementById('gemini-response');
 
+            // --- Helper functions for strict bullet rendering (UI guardrail) ---
+            function escapeHTML(s) {
+                return s.replace(/[&<>"']/g, m => ({
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#39;'
+                }[m]));
+            }
+
+            function bulletsToHTML(text) {
+                const safe = escapeHTML(text || '').slice(0, 800); // UI-level hard cap
+                const lines = safe.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+
+                // Keep only bullet-like lines, cap to 5 bullets, and cap each line length
+                const bullets = lines
+                    .filter(l => /^[-*•]/.test(l))
+                    .slice(0, 5)
+                    .map(l => l.replace(/^[-*•]\s?/, ''))
+                    .map(l => l.length > 80 ? l.slice(0, 77) + '…' : l);
+
+                if (!bullets.length) {
+                    return `<p class="text-gray-400 italic">No bullet output.</p>`;
+                }
+                return `<ul class="list-disc list-inside space-y-1 text-left">${bullets.map(b => `<li>${b}</li>`).join('')}</ul>`;
+            }
+
             generateBtn.addEventListener('click', async () => {
                 const userPrompt = promptTextarea.value.trim();
                 if (!userPrompt) {
@@ -211,15 +239,36 @@
                 }
 
                 responseDiv.innerHTML = '<span class="text-blue-400 animate-pulse">Generating...</span>';
-                
-                // Add a specific instruction to the prompt to focus on Combined Ratio and the media buyer's role
-                const prompt = `Answer this question with short, actionable advice for a media buyer in the insurance industry. Focus only on practical steps to improve the Combined Ratio. Keep the response concise, use clear bullet points, and make it visually scannable. Question: ${userPrompt}`;
 
-                let chatHistory = [];
-                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-                const payload = { contents: chatHistory };
+                // Strict, quantifiable prompt
+                const prompt = `You are writing for a media buyer in the insurance industry.
+Return ONLY:
+- A single bulleted list of 5 items max.
+- Each bullet ≤ 12 words.
+- No intro, no conclusion, no restating the question.
+- Focus: practical actions to improve Combined Ratio if asked by user prompt.
+- Avoid definitions, caveats, and explanations.
+
+Question: ${userPrompt}`;
+
                 const apiKey = "AIzaSyDAVLC5BY2OLOUswa5e05A9h2FIOW6BISs"; // Placeholder for your API key
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                // Payload with generationConfig to cap output
+                const payload = {
+                    systemInstruction: {
+                        role: "system",
+                        parts: [{ text: "Always follow the exact format and length limits given by the user." }]
+                    },
+                    contents: [{ role: "user", parts: [{ text: prompt }] }],
+                    generationConfig: {
+                        maxOutputTokens: 120,    // short list
+                        temperature: 0.4,
+                        topP: 0.9,
+                        candidateCount: 1,
+                        stopSequences: ["\n\n\n"] // optional safeguard
+                    }
+                };
 
                 try {
                     let response;
@@ -236,7 +285,6 @@
                                 body: JSON.stringify(payload)
                             });
                             if (response.status === 429) {
-                                // Too many requests, retry with exponential backoff
                                 const delay = initialDelay * Math.pow(2, retries);
                                 await new Promise(resolve => setTimeout(resolve, delay));
                                 retries++;
@@ -261,18 +309,21 @@
                     }
 
                     const result = await response.json();
-                    
-                    if (result.candidates && result.candidates.length > 0 &&
-                        result.candidates[0].content && result.candidates[0].content.parts &&
-                        result.candidates[0].content.parts.length > 0) {
-                        const text = result.candidates[0].content.parts[0].text;
-                        responseDiv.textContent = text;
-                    } else {
-                        responseDiv.innerHTML = '<span class="text-red-400">Could not generate a response. Please try again.</span>';
+
+                    // Extract text safely
+                    let text = "";
+                    if (result?.candidates?.[0]?.content?.parts?.length) {
+                        text = result.candidates[0].content.parts
+                            .map(p => (typeof p.text === "string" ? p.text : ""))
+                            .join("\n");
                     }
+
+                    // Render as bullets (enforced UI format)
+                    responseDiv.classList.remove('flex', 'items-center', 'justify-center', 'text-center');
+                    responseDiv.innerHTML = bulletsToHTML(text);
                 } catch (error) {
                     console.error('Error:', error);
-                    responseDiv.innerHTML = `<span class="text-red-400">An error occurred: ${error.message}</span>`;
+                    responseDiv.innerHTML = `<span class="text-red-400">An error occurred: ${escapeHTML(error.message)}</span>`;
                 }
             });
         });
