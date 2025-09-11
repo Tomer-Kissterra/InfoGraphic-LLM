@@ -213,7 +213,7 @@
                 responseDiv.innerHTML = '<span class="text-blue-400 animate-pulse">Generating...</span>';
                 
                 // Add a specific instruction to the prompt to focus on Combined Ratio and the media buyer's role
-                const prompt = `Answer this question with actionable advice for a media buyer in the insurance industry, focusing specifically on how to improve the Combined Ratio ,up to 50 words please, User Question: ${userPrompt}`;
+                const prompt = `You are a focused assistant for media buyers in the insurance industry. Only answer questions directly related to the combined ratio. If the user asks anything unrelated or casual, politely decline by saying: ‘I’m only here to help with combined ratio topics — I can’t engage in unrelated conversations.’Provide actionable advice, no more than 50 words.User Question: ${userPrompt}`;
 
                 let chatHistory = [];
                 chatHistory.push({ role: "user", parts: [{ text: prompt }] });
